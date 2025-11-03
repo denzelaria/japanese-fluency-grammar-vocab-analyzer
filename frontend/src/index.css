@@ -1,0 +1,141 @@
+body {
+  background-color:#1e1f23!important;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+*:not(.exclude){
+  color:white!important;
+}
+
+.broder {
+  border-color:#24262b!important
+}
+
+.score {
+  color:var('--score-color')!important
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+* {
+  font-family: "Shippori Mincho", serif;
+  font-style: normal;
+}
+
+.select-option:hover {
+  color:#7a7b81!important
+}
+
+.shadow-custom {
+  z-index:10!important;
+  box-shadow: 0px 0px 19px rgba(0, 0, 0, 0.26)!important;
+}
+
+.spec-co {
+  color:#7a7b81!important;
+}
+
+.borderman {
+  --bs-border-color:#1a1c22
+}
+
+@keyframes fadeIn {
+  from {opacity:0};
+  to {opacity:1}
+}
+
+@keyframes fadeOut {
+  from {opacity:1};
+  to {opacity:0}
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+.custom-modal {
+  display:flex;
+  position:fixed;
+  z-index:20;
+  left:0;
+  top:0;
+  width: 100%;
+  height: 100%;
+  overflow:auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+  justify-content:center;
+  align-items:center;
+  transition:500ms;
+}
+
+.modal-content {
+  background-color: #282c31!important;
+  padding: 20px;
+  width:60%!important;
+  height:90%!important;
+}
+
+.close {
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  transition:300ms;
+}
+
+.close:hover,
+.close:focus {
+  color: rgb(106, 112, 122)!important;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media (max-width:767px) {
+  .menu {
+    display:none!important
+  }
+  p {
+    font-size:11px!important
+  }
+  h1 {
+    font-size:50px!important
+  }
+  h2 {
+    font-size:30px!important
+  }
+  h3 {
+    font-size:20px!important
+  }
+  h4 { 
+    font-size:15px!important
+  }
+  h5 { 
+    font-size:14px!important
+  }
+}
+@media (max-width:576px) {
+  .subbut {
+    margin-top:10px!important;
+  }
+  h1 {
+    font-size:40px!important
+  }
+  .mainman {
+    padding:0!important;
+    margin:0!important
+  }
+  .mostroot {
+    padding:0!important
+  }
+}
