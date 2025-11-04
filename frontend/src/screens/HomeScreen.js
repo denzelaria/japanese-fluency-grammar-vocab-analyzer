@@ -3,11 +3,10 @@ import { Container, Row, Col, Form, Button, Fade, Modal } from 'react-bootstrap'
 import { GoogleGenAI } from "@google/genai"
 import LoadingComponent from '../components/LoadingComponent';
 
-const ai = new GoogleGenAI({
-    apiKey:process.env.REACT_APP_GEMINI_API_KEY
-});
-
 const HomeScreen = () => {
+  const ai = new GoogleGenAI({
+    apiKey:process.env.REACT_APP_GEMINI_API_KEY
+  });
   const [process, setProcess] = useState(false)
   const [sentence, setSentence] = useState("")
   const [score, setScore] = useState("")
