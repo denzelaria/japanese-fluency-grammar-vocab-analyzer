@@ -163,12 +163,12 @@ const HomeScreen = () => {
   }
 
   useEffect(() => {
-    if (!ai && process.env.REACT_APP_GEMINI_API_KEY) {
-        const initai = new GoogleGenAI({
-            apiKey : process?.env?.REACT_APP_GEMINI_API_KEY || ''
-        });
-        setAi(initai)
-    }
+    // if (!ai && process.env.REACT_APP_GEMINI_API_KEY) {
+    //     const initai = new GoogleGenAI({
+    //         apiKey : process?.env?.REACT_APP_GEMINI_API_KEY || ''
+    //     });
+    //     setAi(initai)
+    // }
     const initializeKuromoji = () => {
         // Check if kuromoji is available
         if (typeof window.kuromoji === 'undefined') {
