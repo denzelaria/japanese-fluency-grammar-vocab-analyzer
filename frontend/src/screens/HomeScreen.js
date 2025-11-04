@@ -206,7 +206,6 @@ const HomeScreen = () => {
     }
     initializeKuromoji();
     loadDictionary();
-    console.log(process?.env?.REACT_APP_GEMINI_API_KEY || '')
     }, []);
 
   return (
