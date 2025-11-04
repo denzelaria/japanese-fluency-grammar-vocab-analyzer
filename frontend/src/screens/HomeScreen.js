@@ -5,7 +5,7 @@ import LoadingComponent from '../components/LoadingComponent';
 
 const HomeScreen = () => {
   const [ai, setAi] = useState(null)
-  const [process, setProcess] = useState(false)
+  const [working, setWorking] = useState(false)
   const [sentence, setSentence] = useState("")
   const [score, setScore] = useState("")
   const [color, setColor] = useState("")
@@ -31,7 +31,7 @@ const HomeScreen = () => {
         setTranslation((await res.json()).translation)
     }catch(error) {
         alert(error)
-        setProcess(false)
+        setWorking(false)
         setDone(false)
         setError("Translation failed. Please try again later.")
     }
@@ -57,7 +57,7 @@ const HomeScreen = () => {
   }
 
   const analyze = async (text) => {
-    setProcess(true)
+    setWorking(true)
     setDone(false)
     try {
         if (!tokenizer) {
@@ -73,13 +73,13 @@ const HomeScreen = () => {
             tokens.map(token => getMeaning(token))
         )).filter(result => result !== undefined);
         setResults(foundResults)
-        setProcess(false)
+        setWorking(false)
         setDone(true)
         console.log(tokens)
         console.log(results)
     }catch(error) {
         alert(error)
-        setProcess(false)
+        setWorking(false)
         setDone(false)
         setError("Error with dictionary. Please try again later.")
     }
@@ -93,7 +93,7 @@ const HomeScreen = () => {
         }else {
             setError("")
             setDone(false)
-            setProcess(true)
+            setWorking(true)
             setChange(false)
             setScore("")
             setResults([])
@@ -152,12 +152,12 @@ const HomeScreen = () => {
                 await getTranslation(sentence)
             }
             setDone(true)
-            setProcess(false)
+            setWorking(false)
         }
     } catch(error) {
         alert(error)
         setDone(false)
-        setProcess(false)
+        setWorking(false)
         setError("Error occured. AI may be experiencing too much requests or is temporarily shut down. Please try again later (should work after a few seconds to a minute)")
     }
   }
@@ -206,7 +206,7 @@ const HomeScreen = () => {
     }
     initializeKuromoji();
     loadDictionary();
-    }, [process.env]);
+    }, []);
 
   return (
     <>
@@ -214,10 +214,10 @@ const HomeScreen = () => {
             <Container className="shadow-custom d-flex flex-row mt-3 justify-content-center align-items-center w-75 rounded-4" style={{backgroundColor:"#282c31"}} fluid>
                 <Row className="d-flex w-100" fluid>
                     <Col className="menu p-0 m-0 text-center border-end borderman border-4 text-decoration-none" lg={6} md={6}>
-                        <Button className="select-option bg-transparent border-0 d-flex justify-content-center align-items-center text-center m-0 p-0 h-100 w-100" onClick={() => {setType(0); setDone(false); setProcess(false);setChange(true)}}>Fluency evaluator</Button>
+                        <Button className="select-option bg-transparent border-0 d-flex justify-content-center align-items-center text-center m-0 p-0 h-100 w-100" onClick={() => {setType(0); setDone(false); setWorking(false);setChange(true)}}>Fluency evaluator</Button>
                     </Col>
                     <Col className="menu p-0 m-0 text-center text-decoration-none" lg={6} md={6} as="a">
-                        <Button className="select-option bg-transparent border-0 d-flex justify-content-center align-items-center text-center m-0 p-3 h-100 w-100" onClick={() => {setType(1); setDone(false); setProcess(false);setChange(true)}}>Word extractor</Button>
+                        <Button className="select-option bg-transparent border-0 d-flex justify-content-center align-items-center text-center m-0 p-3 h-100 w-100" onClick={() => {setType(1); setDone(false); setWorking(false);setChange(true)}}>Word extractor</Button>
                     </Col>
                 </Row>
             </Container>
@@ -242,10 +242,10 @@ const HomeScreen = () => {
                         :null
                     }
                 </Form>
-                { process &&
+                { working &&
                     <LoadingComponent textput="Evaluating"/>
                 }
-                { type === 0 && done && !process && !change && score ? 
+                { type === 0 && done && !working && !change && score ? 
                         <div className="fade-in">
                             <Col className="d-flex flex-column m-0 p-0 justify-content-center text-center align-items-center">
                                 <p className="m-0">Fluency</p>
@@ -260,7 +260,7 @@ const HomeScreen = () => {
                     type === 1 && done && !change ?
                         <>
                             <Row>
-                                { translation && !process ?
+                                { translation && !working ?
                                     <p className="mt-4 text-center fade-in">{translation}</p>
                                     :<span className="mt-4 text-center"><LoadingComponent textput="Translating"/></span>
                                 }
@@ -333,7 +333,7 @@ const HomeScreen = () => {
                         </>
                 :null
                 }
-                { error && !process && !score && !translation &&
+                { error && !working && !score && !translation &&
                     <p className="fade-in">{error}</p>
                 }
             </Container>
