@@ -5,7 +5,7 @@ import LoadingComponent from '../components/LoadingComponent';
 
 const HomeScreen = () => {
   const ai = new GoogleGenAI({
-    apiKey:process.env.REACT_APP_GEMINI_API_KEY
+    apiKey : process?.env?.REACT_APP_GEMINI_API_KEY || ''
   });
   const [process, setProcess] = useState(false)
   const [sentence, setSentence] = useState("")
@@ -201,7 +201,8 @@ const HomeScreen = () => {
         }
     }
     initializeKuromoji();
-    loadDictionary()
+    loadDictionary();
+    console.log(process?.env?.REACT_APP_GEMINI_API_KEY || '')
     }, []);
 
   return (
