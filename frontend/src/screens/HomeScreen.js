@@ -115,7 +115,7 @@ const HomeScreen = () => {
                                 grammar:50%, 
                                 vocabulary:10%, 
                                 naturalness(formality and informality will go in this category):40%. 
-                                if the sentence, is not in japanese then give it a 0. youre goal is to analyze japanese sentences, and respond or explain your analyzations in english. and if the given japanese sentence does not form a complete, logical sentence and does not fit any context, give it a low score
+                                if the sentence, is not in japanese then give it a 0. youre goal is to analyze japanese sentences, and respond or explain your analyzations in english. and if the given japanese sentence does not form a complete, logical sentence and does not fit any context, give it a 0-10%.
                                 Respond in EXACTLY this format:
                                 score/100@problems but talk about only issues, be specific@alternate, improved Japanese version
                                 Also, write only maximum of 120 words MAKE SURE TO MAKE RESPONSE EXTREMELY SHORT and make sure to put @ between the score, problems and alternate(no spaces) so i can split them. Speak and analyze in english, unless referring to mistakes or alternatives.`}]
