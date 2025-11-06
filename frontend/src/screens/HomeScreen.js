@@ -115,7 +115,7 @@ const HomeScreen = () => {
                                 grammar:50%, 
                                 vocabulary:10%, 
                                 naturalness(formality and informality will go in this category):40%. 
-                                if the sentence is in english or another language, then give it a 0/100.
+                                if the sentence, is not in japanese then give it a 0. youre goal is to analyze japanese sentences, and respond or explain your analyzations in english.
                                 Respond in EXACTLY this format:
                                 score/100@problems but talk about only issues, be specific@alternate, improved Japanese version
                                 Also, write only maximum of 120 words MAKE SURE TO MAKE RESPONSE EXTREMELY SHORT and make sure to put @ between the score, problems and alternate(no spaces) so i can split them. Speak and analyze in english, unless referring to mistakes or alternatives.`}]
@@ -338,7 +338,7 @@ const HomeScreen = () => {
                 }
             </Container>
         </Container>
-        <p className="mb-3 p-0 spec-co exclude text-center"><a onClick={() => setOpen(true)} className="fnt-italic mb-3 spec-co" style={{cursor:"pointer"}}>How to use</a> | Dictionary lookups may not be completely accurate</p>
+        <p className=  "mb-3 p-0 spec-co exclude text-center"><a onClick={() => setOpen(true)} className="fnt-italic mb-3 spec-co" style={{cursor:"pointer"}}>How to use</a> | Dictionary lookups may not be completely accurate</p>
         <div className="fade-in custom-modal" style={{display: open ? "flex" : "none"}}>
             <Container className="d-flex flex-column align-items-center modal-content p-0 rounded-4">
                 <Row className="d-flex justify-content-end align-items-end text-end w-100 h-auto pe-3 pt-2"><span className="h-auto w-auto close p-0 m-0" onClick={() => setOpen(false)}>&times;</span></Row>
