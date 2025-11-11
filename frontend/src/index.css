@@ -101,10 +101,18 @@ code {
   cursor: pointer;
 }
 
+.oneb {
+  background-color:#2b3035!important;
+}
+
+.oneb:hover {
+  background-color:#262a2e!important
+}
+
 @media (max-width:767px) {
-  .menu {
+  /* .menu {
     display:none!important
-  }
+  } */
   p {
     font-size:11px!important
   }
@@ -131,11 +139,14 @@ code {
   h1 {
     font-size:40px!important
   }
-  .mainman {
-    padding:0!important;
-    margin:0!important
+  .mainman.mainman-cust {
+    padding:0px!important;
+    margin:0px!important;
   }
-  .mostroot {
-    padding:0!important
-  }
+}
+
+.sent-d {
+  background-color: #212429;
+  border: 1px solid rgb(66, 73, 83) !important;
+  border-radius:30px;
 }

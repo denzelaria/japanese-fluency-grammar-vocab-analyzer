@@ -13,7 +13,7 @@ const LoadingComponent = (props) => {
     return () => clearInterval(interval)
   }, [])
   return (
-    <p className="fade-in">{text}</p>
+    <p className="fade-in m-0 mt-2">{text}</p>
   )
 }
 

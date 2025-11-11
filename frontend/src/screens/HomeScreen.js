@@ -22,6 +22,76 @@ const HomeScreen = () => {
   const [error, setError] = useState("")
   const [change, setChange] = useState(false)
   const [open, setOpen] = useState(false)  
+  const [toTran, setToTran] = useState("")
+
+  const getEnSent = async () => {
+    try {
+        setToTran("")
+        setFormality("")
+        setError("")
+        const abouts = [
+            "the speaker:aka the person saying the sentence.",
+            "the general public/society",
+            "the person youre talking to",
+            "the group youre talking to",
+            "a 3rd person not in the conversation",
+        ]
+        const sentenceStructures = [
+            "simple statement about",
+            "asking for opinion on",
+            "opinion on",
+            "plan related to",
+            "complaint about",
+            "asking for help to do something in the topic of",
+            "suggestion for"
+        ];
+        const topics = [
+            "a specific person or country in politics",
+            "your daily routine and schedule", 
+            "food, meals or cuisines",
+            "plans for weekends or holidays",
+            "weather and seasonal activities",
+            "a random sport",
+            "shopping and new products",
+            "health, and self-care routines",
+            "school/university/studies",
+            "family, friends, and relationships",
+            "work, studies, and future goals",
+            "travel experiences in abroad",
+            "public transport or personal transport",
+            "household chores and home life",
+            "a random form of entertainment (movies, music, books)",
+            "current events and personal observations"
+        ];
+        const mathCalc0 = await Math.floor(Math.random()*5)
+        const mathCalc = await Math.floor(Math.random()*16)
+        const mathCalc1 = await Math.floor(Math.random()*7)
+        const topic = topics[mathCalc]
+        const struct = sentenceStructures[mathCalc1]
+        const about = abouts[mathCalc0]
+        console.log(topic)
+        console.log(struct)
+        console.log(about)
+        const data = await ai.models.generateContent({
+                model:"gemini-2.5-flash",
+                contents:`You need to help people learning japanese by providing an english sentence(ONLY 1, PRETTY SHORT SENTENCE) for them to try and translate into japanese. The sentence should be in the form of a speaker, should use normal day-to-day words, and should be understandable even without any context, examples: 'I dont think salmon is much better than tuna.', 'Have you gone to the gym yet today?', 'I cant stand people in japan. Theyre so stupid.'. Respond with nothing except the sentence you give. You should make the sentence about: ${struct} ${topic} with the target of the topic/convo being ${about}, and in a casual tone, but make sure to include specific nouns when possible.`,
+                config:{ 
+                    temperature:0.8,
+                    maxOutputTokens:1500,
+                    candidateCount: 1,
+                }
+            })
+        const mathCalc2 = await Math.floor(Math.random()*3)
+        const forms = ["formal","normal","casual"]
+        setFormality(forms[mathCalc2])
+        setToTran(data.text)
+    }catch(error) {
+        alert(error)
+        setDone(false)
+        setWorking(false)
+        setError("Error occured. AI may be experiencing too much requests or is temporarily shut down. Please try again later (should work after a few seconds to a minute)")
+    }
+  }
 
   const getTranslation = async (text) => {
     try {
@@ -75,8 +145,6 @@ const HomeScreen = () => {
         setResults(foundResults)
         setWorking(false)
         setDone(true)
-        console.log(tokens)
-        console.log(results)
     }catch(error) {
         alert(error)
         setWorking(false)
@@ -98,10 +166,14 @@ const HomeScreen = () => {
             setScore("")
             setResults([])
             setTranslation("")
-            if (type === 0) {
+            var addition = ""
+            if (toTran) {
+                addition = " Original sentence which the user was supposed to translate into japanese based on:"+toTran
+            }
+            if (type === 0 || type === 2) {
                 const data = await ai.models.generateContent({
                     model:"gemini-2.5-flash",
-                    contents:"Text to analyze:"+ sentence+ "Formality:"+ formality,
+                    contents:"Text to analyze:"+ sentence+ "Formality:"+ formality+addition,
                     config:{ 
                         temperature:0.2,
                         maxOutputTokens:4000,
@@ -109,7 +181,7 @@ const HomeScreen = () => {
                         systemInstruction: {
                             parts: [{ 
                                 text: `
-                                You are a language prompt criticizer based on how fluent and accurate their language is, with your response being written assuming the person speaks english. 
+                                You are a language prompt criticizer based on how fluent and accurate their language is.
                                 You will be given a prompt and it will also give formality, which can be none(so how fluent in general it is), formal, or casual. 
                                 Mark scheme:
                                 grammar:50%, 
@@ -118,7 +190,8 @@ const HomeScreen = () => {
                                 if the sentence, is not in japanese then give it a 0. youre goal is to analyze japanese sentences, and respond or explain your analyzations in english. and if the given japanese sentence does not form a complete, logical sentence and does not fit any context, give it a 0-10%, for example if its a single word with no context like an exclamation mark or question mark.
                                 Respond in EXACTLY this format:
                                 score/100@problems but talk about only issues, be specific@alternate, improved Japanese version
-                                Also, write only maximum of 120 words MAKE SURE TO MAKE RESPONSE EXTREMELY SHORT and make sure to put @ between the score, problems and alternate(no spaces) so i can split them. Speak and analyze in english, unless referring to mistakes or alternatives.`}]
+                                Also, write only maximum of 120 words MAKE SURE TO MAKE RESPONSE EXTREMELY SHORT and make sure to put @ between the score, problems and alternate(no spaces) so i can split them. Please make sure that you speak in english.
+                                `}]
                         }
                     }
                 })
@@ -210,34 +283,54 @@ const HomeScreen = () => {
 
   return (
     <>
-        <Container className="mostroot h-100 w-100 d-flex flex-column justify-content-center align-items-center">
+        <Container className="p-0 m-0 h-auto w-100 d-flex flex-column justify-content-center align-items-center">
             <Container className="shadow-custom d-flex flex-row mt-3 justify-content-center align-items-center w-75 rounded-4" style={{backgroundColor:"#282c31"}} fluid>
                 <Row className="d-flex w-100" fluid>
-                    <Col className="menu p-0 m-0 text-center border-end borderman border-4 text-decoration-none" lg={6} md={6}>
+                    <Col className="menu p-0 m-0 text-center text-decoration-none" lg={4} md={4} sm={4} xs={4}>
                         <Button className="select-option bg-transparent border-0 d-flex justify-content-center align-items-center text-center m-0 p-0 h-100 w-100" onClick={() => {setType(0); setDone(false); setWorking(false);setChange(true)}}>Fluency evaluator</Button>
                     </Col>
-                    <Col className="menu p-0 m-0 text-center text-decoration-none" lg={6} md={6} as="a">
+                    <Col className="menu p-0 m-0 text-center text-decoration-none border-end border-start borderman border-4 text-decoration-none" lg={4} md={4} sm={4} xs={4}>
+                        <Button className="select-option bg-transparent border-0 d-flex justify-content-center align-items-center text-center m-0 p-3 h-100 w-100" onClick={() => {setType(2); setDone(false); setWorking(false);setChange(true)}}>Practice</Button>
+                    </Col>
+                    <Col className="menu p-0 m-0 text-center text-decoration-none" lg={4} md={4} sm={4} xs={4}>
                         <Button className="select-option bg-transparent border-0 d-flex justify-content-center align-items-center text-center m-0 p-3 h-100 w-100" onClick={() => {setType(1); setDone(false); setWorking(false);setChange(true)}}>Word extractor</Button>
                     </Col>
                 </Row>
             </Container>
             <Container className="mainman d-flex flex-column w-75 p-5 my-3 rounded-4 shadow-custom" style={{backgroundColor:"#282c31"}} fluid>
                 <Form onSubmit={(e) => handleSubmit(e)}data-bs-theme="dark" className="d-flex flex-column justify-content-center align-items-center w-100" style={{backgroundColor:"#282c31"}} fluid>
+                    {
+                        type === 2 &&
+                            <Row className="d-flex flex-row m-0 w-100 p-0" fluid>
+                                <Container className="d-flex flex-column justify-content-center align-items-center sent-d py-4 px-3 mb-2 w-100" fluid>
+                                    { toTran &&
+                                        <>
+                                            <p className="m-0">Try to say in japanese:</p>
+                                            <h3 className="m-0 my-3 text-center">{toTran}</h3>
+                                            <p>(in a {formality} tone)</p>
+                                        </>
+                                    }
+                                    <Button className="oneb border-0" style={{backgroundColor:"#282c31"}} onClick={getEnSent}>Generate english sentence</Button>
+                                </Container>
+                            </Row>
+                    }
                     <Row className="d-flex flex-row w-100 justify-content-center align-items-center">
-                        <Col sm={8} md={9} lg={10} className="d-flex m-0 px-1 justify-content-center align-items-center">
+                        <Col sm={8} md={9} lg={10} xl={10} className="d-flex m-0 p-0 justify-content-center align-items-center">
                             <Form.Group className="w-100">
                                 <Form.Control className="rounded-pill px-3 py-2 w-100" value={sentence} onChange={(e) => setSentence(e.target.value)} placeholder="Enter japanese text here"></Form.Control>
                             </Form.Group>
                         </Col>
-                        <Col className="d-flex m-0 px-1 justify-content-center align-items-center" sm={4} md={3} lg={2}><Button className="subbut rounded-pill px-3 py-2" type="submit">Submit</Button></Col>
+                        <Col className="d-flex m-0 p-0 justify-content-center align-items-center" sm={4} md={3} lg={2} xl={2}>
+                            <Button className="subbut rounded-pill py-2" style={{width:"90%",}}type="submit">Submit</Button>
+                        </Col>
                     </Row>
                     { type === 0 ? 
                         <Form.Group className="d-flex w-100 justify-content-center my-3">
-                            <div className="d-flex flex-row  justify-content-between" style={{width:"300px"}}>
-                                <Form.Check name="formality" checked={formality === "none"} type="radio" label="None" id="radio1" onChange={() => setFormality("none")}></Form.Check>
-                                <Form.Check name="formality" checked={formality === "casual"} type="radio" label="Casual" id="radio2" onChange={() => setFormality("casual")}></Form.Check>
-                                <Form.Check name="formality" checked={formality === "formal"} type="radio" label="Formal" id="radio3" onChange={() => setFormality("formal")}></Form.Check>
-                            </div>
+                            <Row className="d-flex flex-row  justify-content-between" style={{width:"300px"}}>
+                                <Col className="d-flex justify-content-center" lg={4} md={4} sm={4} xs={12}><Form.Check name="formality" checked={formality === "none"} type="radio" label="None" id="radio1" onChange={() => setFormality("none")}></Form.Check></Col>
+                                <Col className="d-flex justify-content-center" lg={4} md={4} sm={4} xs={12}><Form.Check name="formality" checked={formality === "casual"} type="radio" label="Casual" id="radio2" onChange={() => setFormality("casual")}></Form.Check></Col>
+                                <Col className="d-flex justify-content-center" lg={4} md={4} sm={4} xs={12}><Form.Check name="formality" checked={formality === "formal"} type="radio" label="Formal" id="radio3" onChange={() => setFormality("formal")}></Form.Check></Col>
+                            </Row>
                         </Form.Group>
                         :null
                     }
@@ -245,16 +338,16 @@ const HomeScreen = () => {
                 { working &&
                     <LoadingComponent textput="Evaluating"/>
                 }
-                { type === 0 && done && !working && !change && score ? 
+                { (type === 0 || type === 2) && done && !working && !change && score ? 
                         <div className="fade-in">
                             <Col className="d-flex flex-column m-0 p-0 justify-content-center text-center align-items-center">
-                                <p className="m-0">Fluency</p>
+                                <p className="m-0 mt-2">Fluency</p>
                                 <h1 className="m-0 exclude score fw-bold" style={{color:color, fontSize:"65px"}}>{score}%</h1>
                             </Col>
                             <h5 className="fw-bold">Problems</h5>
                             <p>{problems}</p>
                             <h5 className="fw-bold">Alternate Version</h5>
-                            <p>{alternate}</p>
+                            <p className="mb-0">{alternate}</p>
                         </div>
                 : 
                     type === 1 && done && !change ?
@@ -334,7 +427,7 @@ const HomeScreen = () => {
                 :null
                 }
                 { error && !working && !score && !translation &&
-                    <p className="fade-in">{error}</p>
+                    <p className="fade-in mb-0 mt-2">{error}</p>
                 }
             </Container>
         </Container>
