@@ -109,19 +109,25 @@ const HomeScreen = () => {
 
   const getMeaning = (word) => {
     const isKatakana = (text) => /^[\u30A0-\u30FF]+$/.test(text);
-    const q = dictionary.find(item => {
+    const q = dictionary.filter(item => {
         if (isKatakana(word.basic_form)) {
             return item.kana?.some(kanaObj => kanaObj.text === word.basic_form);
         } else {
             return item.kanji?.some(kanjiObj => kanjiObj.text === word.basic_form)
         }
     });
-    if (q) {
-      return {
-        word: word.basic_form,
-        reading: q.kana[0].text,
-        meaning: q.sense[0].gloss[0].text
-      }
+    if (q.length > 0) {
+        const allMeanings = q.flatMap(entry =>
+            entry.sense.flatMap(sense => 
+                sense.gloss.map(gloss => gloss.text)
+            )
+        );
+        
+        return {
+            word: word.basic_form,
+            reading: q.kana[0].text,
+            meaning: q.sense[0].gloss[0].text
+        }
     }
     return
   }
@@ -167,7 +173,7 @@ const HomeScreen = () => {
             setResults([])
             setTranslation("")
             var addition = ""
-            if (toTran) {
+            if (type === 2 && toTran) {
                 addition = " Original sentence which the user was supposed to translate into japanese based on:"+toTran
             }
             if (type === 0 || type === 2) {
@@ -182,12 +188,12 @@ const HomeScreen = () => {
                             parts: [{ 
                                 text: `
                                 You are a language prompt criticizer based on how fluent and accurate their language is.
-                                You will be given a prompt and it will also give formality, which can be none(so how fluent in general it is), formal, or casual. 
+                                You will be given a prompt and formality, which can be none(so how fluent in general it is), formal, or casual. 
                                 Mark scheme:
                                 grammar:50%, 
                                 vocabulary:10%, 
                                 naturalness(formality and informality will go in this category):40%. 
-                                if the sentence, is not in japanese then give it a 0. youre goal is to analyze japanese sentences, and respond or explain your analyzations in english. and if the given japanese sentence does not form a complete, logical sentence and does not fit any context, give it a 0-10%, for example if its a single word with no context like an exclamation mark or question mark.
+                                if the sentence they gave, is not japanese then give it a 0. youre goal is to analyze japanese sentences, and respond in english. if the given japanese sentence does not form a complete, logical sentence and does not fit any context, give it a 0-10%, for example if its a single word with no context like an exclamation mark or question mark.
                                 Respond in EXACTLY this format:
                                 score/100@problems but talk about only issues, be specific@alternate, improved Japanese version
                                 Also, write only maximum of 120 words MAKE SURE TO MAKE RESPONSE EXTREMELY SHORT and make sure to put @ between the score, problems and alternate(no spaces) so i can split them. Please make sure that you speak in english.
@@ -284,7 +290,7 @@ const HomeScreen = () => {
   return (
     <>
         <Container className="p-0 m-0 h-auto w-100 d-flex flex-column justify-content-center align-items-center">
-            <Container className="shadow-custom d-flex flex-row mt-3 justify-content-center align-items-center w-75 rounded-4" style={{backgroundColor:"#282c31"}} fluid>
+            <Container className="animate__animated animate__fadeInUp shadow-custom d-flex flex-row mt-3 justify-content-center align-items-center w-75 rounded-4" style={{backgroundColor:"#282c31"}} fluid>
                 <Row className="d-flex w-100" fluid>
                     <Col className="menu p-0 m-0 text-center text-decoration-none" lg={4} md={4} sm={4} xs={4}>
                         <Button className="select-option bg-transparent border-0 d-flex justify-content-center align-items-center text-center m-0 p-0 h-100 w-100" onClick={() => {setType(0); setDone(false); setWorking(false);setChange(true)}}>Fluency evaluator</Button>
@@ -297,7 +303,7 @@ const HomeScreen = () => {
                     </Col>
                 </Row>
             </Container>
-            <Container className="mainman d-flex flex-column w-75 p-5 my-3 rounded-4 shadow-custom" style={{backgroundColor:"#282c31"}} fluid>
+            <Container className="animate__animated animate__fadeInUp mainman d-flex flex-column w-75 p-5 my-3 rounded-4 shadow-custom" style={{backgroundColor:"#282c31"}} fluid>
                 <Form onSubmit={(e) => handleSubmit(e)}data-bs-theme="dark" className="d-flex flex-column justify-content-center align-items-center w-100" style={{backgroundColor:"#282c31"}} fluid>
                     {
                         type === 2 &&
@@ -431,7 +437,7 @@ const HomeScreen = () => {
                 }
             </Container>
         </Container>
-        <p className=  "mb-3 p-0 spec-co exclude text-center"><a onClick={() => setOpen(true)} className="fnt-italic mb-3 spec-co" style={{cursor:"pointer"}}>How to use</a> | Dictionary lookups may not be completely accurate</p>
+        <p className="animate__animated animate__fadeInUp mb-3 p-0 spec-co exclude text-center"><a onClick={() => setOpen(true)} className="fnt-italic mb-3 spec-co" style={{cursor:"pointer"}}>How to use</a> | Dictionary lookups may not be completely accurate</p>
         <div className="fade-in custom-modal" style={{display: open ? "flex" : "none"}}>
             <Container className="d-flex flex-column align-items-center modal-content p-0 rounded-4">
                 <Row className="d-flex justify-content-end align-items-end text-end w-100 h-auto pe-3 pt-2"><span className="h-auto w-auto close p-0 m-0" onClick={() => setOpen(false)}>&times;</span></Row>
