@@ -175,6 +175,8 @@ const HomeScreen = () => {
             var addition = ""
             if (type === 2 && toTran) {
                 addition = " Original sentence which the user was supposed to translate into japanese based on:"+toTran
+            }else {
+                addition = ""
             }
             if (type === 0 || type === 2) {
                 const data = await ai.models.generateContent({
