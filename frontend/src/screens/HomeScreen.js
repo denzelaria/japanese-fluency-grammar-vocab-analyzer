@@ -117,16 +117,11 @@ const HomeScreen = () => {
         }
     });
     if (q.length > 0) {
-        const allMeanings = q.flatMap(entry =>
-            entry.sense.flatMap(sense => 
-                sense.gloss.map(gloss => gloss.text)
-            )
-        );
-        
+        console.log(q)
         return {
             word: word.basic_form,
-            reading: q.kana[0].text,
-            meaning: q.sense[0].gloss[0].text
+            reading: q[0].kana[0].text,
+            meaning: q[0].sense[0].gloss[0].text
         }
     }
     return
@@ -144,7 +139,7 @@ const HomeScreen = () => {
             alert('Dictionary is still loading. Please wait...')
             return
         }
-        const tokens = tokenizer.tokenize(text)
+        const tokens = await tokenizer.tokenize(text)
         const foundResults = (await Promise.all(
             tokens.map(token => getMeaning(token))
         )).filter(result => result !== undefined);
